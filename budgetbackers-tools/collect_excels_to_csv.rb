@@ -58,12 +58,36 @@ module MigrateXLToCsv
       start_row = 4
       account_name = 'Credit Cards'
 
-      (start_row..num_of_rows-1).each do |row|
+      (start_row..num_of_rows).each do |row|
         sheet_row = sheet.row(row)
+        amount = sheet_row[amount_col].to_s.gsub(/,|₪|\s/, '')
+        amount = if amount.include? '-'
+                   amount.to_f
+                 else
+                   -amount.to_f
+                 end
+
         csv << [account_name,
                 date,
                 clean_name(sheet_row[name_col].to_s),
-                -sheet_row[amount_col].to_s.gsub(/,|₪|\s/, '').to_f]
+                amount]
+      end
+    elsif sheet.cell('A',1).include? 'תאריך עסקה'
+      # Leumi Card Credit Cards
+      name_col = 2
+      amount_col = 6
+      date_col = 1
+      start_row = 2
+      account_name = 'Credit Cards'
+
+      (start_row..num_of_rows).each do |row|
+        sheet_row = sheet.row(row)
+        amount = sheet_row[amount_col].to_s.gsub(/,|₪|\s/, '').to_f
+        next if amount.zero?
+        csv << [account_name,
+                sheet_row[date_col],
+                clean_name(sheet_row[name_col].to_s),
+                -amount]
       end
     end
   end
