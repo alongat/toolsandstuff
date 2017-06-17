@@ -29,10 +29,10 @@ module CsvToWallet
                note: name }
       api.create_record(body)
     end
-  rescue StandardError => e
-    puts e
-  ensure
-    write_name_category_map
+  # rescue StandardError => e
+  #   puts e
+  # ensure
+  #   write_name_category_map
   end
 
   MAP_FILENAME = 'CATMAP.csv'.freeze

@@ -5,7 +5,7 @@ module MigrateXLToCsv
     Dir.foreach(in_dir) do |item|
       next unless item.include?('.xlsx')
       puts 'Converting ' + item
-      CSV.open(out_dir + '/' + item.sub('.xlsx','.csv'), 'w') do |csv|
+      CSV.open(out_dir + '/' + item.sub('.xlsx','.csv'), 'w', encoding: 'utf-8') do |csv|
         create_csvs_from_xls(in_dir + '/' + item, csv)
       end
     end

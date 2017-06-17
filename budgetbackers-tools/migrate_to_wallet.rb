@@ -1,7 +1,10 @@
-require './collect_excels_to_csv'
-require './csv-to-wallet'
+require '../budgetbackers-tools/collect_excels_to_csv'
+require '../budgetbackers-tools/csv-to-wallet'
 
 MigrateXLToCsv.do_the_trick('in','out')
+
+email = ENV['EMAIL']
+apikey = ENV['APIKEY']
 
 Dir.foreach('out') do |item|
   next unless item.include?('.csv')
