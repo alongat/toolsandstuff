@@ -4,7 +4,10 @@ require 'date'
 # CSV should be as follows in UTF-8
 # Account Name, DATE,NAME,AMOUNT
 
+
 module CsvToWallet
+  MAP_FILENAME = 'CATMAP.csv'
+
   def self.push_csv_to_wallet(filename, email, apikey, params={})
     default_category = params[:default_category]
 
@@ -29,13 +32,33 @@ module CsvToWallet
                note: name }
       api.create_record(body)
     end
-  # rescue StandardError => e
-  #   puts e
-  # ensure
-  #   write_name_category_map
+  rescue StandardError => e
+    puts e
+  ensure
+    write_name_category_map
   end
 
-  MAP_FILENAME = 'CATMAP.csv'.freeze
+  def self.restore_from_backup(backup_file, email, apikey)
+
+    api = Budgetbakers::API.new(email, apikey)
+    CSV.foreach(backup_file, { :col_sep => ',' } ) do |row|
+      puts row
+      date = row[0]
+      category = row[1] || 'Other'
+      account_name = row[2]
+      currency = row[3]
+      type = row[4]
+      amount = row[5]
+      note = row[6]
+      body = { category_name: category,
+               account_name: account_name,
+               amount: amount,
+               date: date,
+               note: note }
+
+      api.create_record(body)
+    end
+  end
 
   def self.load_name_category_map(filename = MAP_FILENAME)
     @category_map = {}
