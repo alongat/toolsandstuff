@@ -61,11 +61,7 @@ module MigrateXLToCsv
       (start_row..num_of_rows).each do |row|
         sheet_row = sheet.row(row)
         amount = sheet_row[amount_col].to_s.gsub(/,|₪|\s/, '')
-        amount = if amount.include? '-'
-                   amount.to_f
-                 else
-                   -amount.to_f
-                 end
+        amount = -amount.to_f
 
         csv << [account_name,
                 date,

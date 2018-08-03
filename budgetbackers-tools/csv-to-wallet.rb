@@ -1,6 +1,6 @@
 require 'budgetbakers'
 require 'date'
-
+require 'awesome_print'
 # CSV should be as follows in UTF-8
 # Account Name, DATE,NAME,AMOUNT
 
@@ -10,11 +10,10 @@ module CsvToWallet
 
   def self.push_csv_to_wallet(filename, email, apikey, params={})
     default_category = params[:default_category]
-
     api = Budgetbakers::API.new(email, apikey)
     load_name_category_map
+    puts filename
     CSV.foreach(filename, { :col_sep => "," } ) do |row|
-      puts row
       account_name = row[0]
       date = row[1]
       name = row[2]
@@ -35,7 +34,7 @@ module CsvToWallet
   rescue StandardError => e
     puts e
   ensure
-    write_name_category_map
+    write_name_category_map unless @category_map&.empty?
   end
 
   def self.restore_from_backup(backup_file, email, apikey)
