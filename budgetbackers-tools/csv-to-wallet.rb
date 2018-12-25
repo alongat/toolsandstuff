@@ -37,8 +37,16 @@ module CsvToWallet
     write_name_category_map unless @category_map&.empty?
   end
 
-  def self.restore_from_backup(backup_file, email, apikey)
+  def self.backup
+    email = ENV['EMAIL']
+    apikey = ENV['APIKEY']
+    api = Budgetbakers::API.new(email, apikey)
+    api.dump_records_to_file
+  end
 
+  def self.restore_from_backup(backup_file)
+    email = ENV['EMAIL']
+    apikey = ENV['APIKEY']
     api = Budgetbakers::API.new(email, apikey)
     CSV.foreach(backup_file, { :col_sep => ',' } ) do |row|
       puts row
