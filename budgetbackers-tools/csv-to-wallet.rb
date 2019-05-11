@@ -4,7 +4,6 @@ require 'awesome_print'
 # CSV should be as follows in UTF-8
 # Account Name, DATE,NAME,AMOUNT
 
-
 module CsvToWallet
   MAP_FILENAME = 'CATMAP.csv'
 
