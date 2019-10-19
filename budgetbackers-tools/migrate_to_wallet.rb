@@ -9,5 +9,5 @@ apikey = ENV['APIKEY']
 Dir.foreach('out') do |item|
   next unless item.include?('.csv')
   puts 'Converting ' + item
-  CsvToWallet.push_csv_to_wallet('out/' + item, email, apikey)
+  # CsvToWallet.push_csv_to_wallet('out/' + item, email, apikey)
 end
